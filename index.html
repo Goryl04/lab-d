@@ -1,14 +1,43 @@
 <!doctype html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Imie Nazwisko (00000) - PTW LAB C</title>
-
+    <title>Kacper Zimecki (57932) - PTW LAB D</title>
     <link rel="stylesheet" href="styles.css" type="text/css">
     <script src="scripts.js" defer></script>
 </head>
-<body>
+<body class="bg-default">
+<div class="app-container">
+    <div class="inputs">
+        <label for="enter_bar">
+            <input type="text" id="enter_bar" placeholder="Podaj miasto ...">
+        </label>
+        <label for="check_btn">
+            <button id="check_btn">Sprawdź pogodę</button>
+        </label>
+    </div>
 
+    <div class="weather_info hidden" id="weather_info">
+        <h2 id="city_name"></h2>
+        <div class="current-weather-details">
+            <img id="current_icon" src="" alt="Ikona pogody" />
+            <div class="main-temp">
+                <p id="temperature"></p>
+                <p id="description" class="desc"></p>
+            </div>
+        </div>
+        <div class="extra-info">
+            <p id="wind_speed"></p>
+            <p id="humidity"></p>
+        </div>
+    </div>
+
+    <div id="forecast" class="hidden">
+        <h2 id="forecast_title"></h2>
+        <div id="forecast_cards" class="forecast-cards-container">
+        </div>
+    </div>
+</div>
 </body>
 </html>
