@@ -19,8 +19,6 @@ body {
 .bg-default { background: linear-gradient(to bottom, #87CEEB, #E0F6FF); }
 .bg-clear { background: linear-gradient(to bottom, #4facfe, #00f2fe); }
 .bg-clouds { background: linear-gradient(to bottom, #8ca3a3, #cbdad5); }
-.bg-rain { background: linear-gradient(to bottom, #4b6cb7, #182848); }
-.bg-snow { background: linear-gradient(to bottom, #e0eafc, #cfdef3); }
 
 /* Animacja dla chmur */
 /* Zachmurzenie - chmurki tylko u góry */
@@ -92,13 +90,16 @@ body {
 .bg-thunderstorm::after {
   content: '';
   position: fixed;
-  top: 10%;
-  left: 20%;
-  width: 3px;
-  height: 150px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #FFFF00 50%, rgba(255, 255, 255, 0) 100%);
-  box-shadow: 0 0 10px 2px #FFFF00;
-  animation: boltStrike 6s infinite;
+  top: 0;
+  width: 250px;
+  height: 350px;
+  /* Rozgałęziona błyskawica narysowana w SVG */
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="250" height="350" viewBox="0 0 250 350"><path d="M150 0 L120 70 L160 80 L90 200 L130 210 L50 350" stroke="%23ffffff" stroke-width="5" stroke-linejoin="round" fill="none"/><path d="M160 80 L220 140 L200 180 M120 70 L60 100 M90 200 L30 240 M130 210 L180 270 L170 310" stroke="%23ffffff" stroke-width="2" stroke-linejoin="round" fill="none" opacity="0.8"/></svg>');
+  background-size: contain;
+  background-repeat: no-repeat;
+  /* Silny efekt świecenia (Glow) */
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.9)) drop-shadow(0 0 30px rgba(150, 200, 255, 0.8));
+  animation: boltStrike 12s infinite;
   z-index: 2;
 }
 
@@ -126,29 +127,21 @@ body {
   }
 }
 
+/* Zmieniona animacja: piorun skacze po różnych pozycjach (left) i zmienia kształt/rozmiar (transform) */
 @keyframes boltStrike {
-  0%, 100% {
-    opacity: 0;
-    left: 20%;
-  }
-  10% {
-    opacity: 1;
-    left: 20%;
-  }
-  12% {
-    opacity: 0;
-    left: 25%;
-  }
-  30% {
-    opacity: 0;
-    left: 45%;
-  }
-  31% {
-    opacity: 1;
-  }
-  33% {
-    opacity: 0;
-  }
+  0%, 100% { opacity: 0; left: 10%; transform: scale(1); }
+  10% { opacity: 1; left: 10%; transform: scale(1); }
+  12% { opacity: 0; left: 10%; transform: scale(1); }
+
+  30% { opacity: 0; left: 60%; transform: scaleX(-1) scale(0.8); }
+  31% { opacity: 1; left: 60%; transform: scaleX(-1) scale(0.8); }
+  33% { opacity: 0; left: 60%; transform: scaleX(-1) scale(0.8); }
+
+  60% { opacity: 0; left: 35%; transform: scale(0.9); }
+  61% { opacity: 1; left: 35%; transform: scale(0.9); }
+  62% { opacity: 0; left: 35%; transform: scale(0.9); }
+  63% { opacity: 1; left: 35%; transform: scale(0.9); }
+  65% { opacity: 0; left: 35%; transform: scale(0.9); }
 }
 
 
@@ -166,16 +159,61 @@ body {
   z-index: -1;
 }
 
-/* Animacja dla deszczu */
-.bg-rain::before {
+/* --- ZMIENIONA, POPRAWNA ANIMACJA DLA DESZCZU --- */
+.bg-rain {
+  /* Mroczny, deszczowy gradient nieba */
+  background: linear-gradient(135deg, #4A5D73 0%, #1E2A38 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Chmury i deszcz jako JEDEN element sięgający do dołu ekranu */
+.bg-rain::before,
+.bg-rain::after {
   content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-image: linear-gradient(to bottom, transparent 80%, rgba(255,255,255,0.4) 100%);
-  background-size: 10px 50px;
-  animation: fallRain 0.5s linear infinite;
-  pointer-events: none;
-  z-index: -1;
+  position: fixed;
+  top: 0;
+  width: 200px;
+  height: 100vh; /* Rozciągamy kontener na deszcz do samego dołu */
+
+  /* 1 warstwa (na wierzchu): Chmura narysowana w SVG z gradientem 3D */
+  /* 2 warstwa (pod spodem): Kropelki deszczu */
+  background-image:
+    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="100"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="%237a8c9e"/><stop offset="100%" stop-color="%234a5d73"/></linearGradient></defs><rect width="200" height="100" rx="50" fill="url(%23g)"/></svg>'),
+    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><line x1="20" y1="0" x2="20" y2="15" stroke="white" stroke-opacity="0.4" stroke-width="2" stroke-linecap="round"/><line x1="70" y1="40" x2="70" y2="55" stroke="white" stroke-opacity="0.3" stroke-width="1.5" stroke-linecap="round"/><line x1="40" y1="80" x2="40" y2="95" stroke="white" stroke-opacity="0.5" stroke-width="2" stroke-linecap="round"/></svg>');
+
+  background-size: 200px 100px, 100px 100px;
+
+  /* Chmura pojawia się raz, a deszcz powtarza się w osi Y */
+  background-repeat: no-repeat, repeat-y;
+  z-index: 1;
+
+  /* Łączymy animację bujania całej chmury z animacją padania kropel */
+  animation: floatClouds 15s infinite ease-in-out, fallRainLocal 0.7s linear infinite;
+
+  /* --- NOWE POZYCJONOWANIE --- */
+  /* Chmura: 0 0 (góra-lewo) */
+  /* Deszcz: 50px 100px (przesunięty na środek i ZACZYNA SIĘ POD CHMURĄ) */
+  background-position: 0 0, 50px 100px;
+}
+
+/* Pierwsza chmura z lewej */
+.bg-rain::before {
+  left: 10%;
+  animation-delay: 0s, 0s;
+}
+
+/* Druga chmura z prawej */
+.bg-rain::after {
+  right: 10%;
+  animation-delay: 5s, 0s; /* Opóźniamy tylko bujanie, deszcz pada od razu */
+}
+
+/* Klatka kluczowa animująca wyłącznie kropelki w dół kontenera */
+/* Zaczynamy od pionowego przesunięcia 100px (pod chmurą) */
+@keyframes fallRainLocal {
+  from { background-position: 0 0, 50px 100px; }
+  to { background-position: 0 0, 50px 200px; }
 }
 
 @keyframes moveClouds {
@@ -186,9 +224,57 @@ body {
   from { transform: scale(1); opacity: 0.8; }
   to { transform: scale(1.1); opacity: 1; }
 }
-@keyframes fallRain {
-  from { background-position: 0 0; }
-  to { background-position: 0 100vh; }
+
+/* --- ANIMACJA DLA ŚNIEGU - Z PRAWDZIWYMI PŁATKAMI --- */
+.bg-snow {
+  /* Zimowy gradient nieba */
+  background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* --- ANIMACJA DLA ŚNIEGU - Z PRAWDZIWYMI PŁATKAMI --- */
+.bg-snow::before,
+.bg-snow::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  width: 200px;
+  height: 100vh;
+
+  /* 1 warstwa: Zimowa chmura w SVG */
+  /* 2 warstwa: Estetyczne, klasyczne płatki śniegu (sześcioramienne) w SVG */
+  background-image:
+    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="100"><defs><linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="%23ffffff"/><stop offset="100%" stop-color="%23d0deeb"/></linearGradient></defs><rect width="200" height="100" rx="50" fill="url(%23s)"/></svg>'),
+    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150"><g stroke="%23ffffff" stroke-width="4" stroke-linecap="round"><g transform="translate(10 10) scale(0.6)" opacity="0.9"><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15"/><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15" transform="rotate(60 50 50)"/><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15" transform="rotate(120 50 50)"/><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15" transform="rotate(180 50 50)"/><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15" transform="rotate(240 50 50)"/><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15" transform="rotate(300 50 50)"/></g><g transform="translate(80 30) scale(0.35)" opacity="0.6"><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15"/><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15" transform="rotate(60 50 50)"/><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15" transform="rotate(120 50 50)"/><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15" transform="rotate(180 50 50)"/><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15" transform="rotate(240 50 50)"/><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15" transform="rotate(300 50 50)"/></g><g transform="translate(30 80) scale(0.5)" opacity="0.8"><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15"/><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15" transform="rotate(60 50 50)"/><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15" transform="rotate(120 50 50)"/><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15" transform="rotate(180 50 50)"/><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15" transform="rotate(240 50 50)"/><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15" transform="rotate(300 50 50)"/></g></g></svg>');
+
+  /* Rozmiar kafelka z płatkami ustawiony na 120px dla idealnej skali */
+  background-size: 200px 100px, 120px 120px;
+  background-repeat: no-repeat, repeat-y;
+  z-index: 1;
+
+  /* Płynne bujanie chmury i powolne opadanie śniegu */
+  animation: floatClouds 15s infinite ease-in-out, fallSnowLocal 2s linear infinite;
+
+  /* Wyśrodkowanie pod chmurą */
+  background-position: 0 0, 40px 100px;
+}
+
+.bg-snow::before {
+  left: 10%;
+  animation-delay: 0s, 0s;
+}
+
+.bg-snow::after {
+  right: 10%;
+  animation-delay: 5s, 0s;
+}
+
+/* Klatka kluczowa animująca powolne padanie śniegu */
+/* Przesuwamy o rozmiar kafelka płatków, czyli 120px */
+@keyframes fallSnowLocal {
+  from { background-position: 0 0, 40px 100px; }
+  to { background-position: 0 0, 40px 220px; }
 }
 
 /* --- GŁÓWNY KONTENER --- */
