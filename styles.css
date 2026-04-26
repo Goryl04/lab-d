@@ -12,22 +12,15 @@ body {
   align-items: center;
   min-height: 100vh;
   transition: background 0.5s ease;
-  overflow-x: hidden;
+  overflow-x: hidden; /* Ukrywa tylko poziomy pasek przez animacje w tle */
 }
 
 /* --- DYNAMICZNE TŁA I ANIMACJE --- */
 .bg-default { background: linear-gradient(to bottom, #87CEEB, #E0F6FF); }
 .bg-clear { background: linear-gradient(to bottom, #4facfe, #00f2fe); }
-.bg-clouds { background: linear-gradient(to bottom, #8ca3a3, #cbdad5); }
+.bg-clouds { background: linear-gradient(to bottom, #8ca3a3, #cbdad5); position: relative; }
 
 /* Animacja dla chmur */
-/* Zachmurzenie - chmurki tylko u góry */
-.bg-clouds {
-  background: linear-gradient(135deg, #87CEEB 0%, #E0F6FF 100%);
-  position: relative;
-  overflow: hidden;
-}
-
 .bg-clouds::before,
 .bg-clouds::after {
   content: '';
@@ -41,48 +34,29 @@ body {
   z-index: 1;
 }
 
-.bg-clouds::before {
-  left: 10%;
-  animation-delay: 0s;
-}
-
-.bg-clouds::after {
-  right: 10%;
-  animation-delay: 5s;
-}
+.bg-clouds::before { left: 10%; animation-delay: 0s; }
+.bg-clouds::after { right: 10%; animation-delay: 5s; }
 
 @keyframes floatClouds {
-  0% {
-    transform: translateX(0) translateY(0);
-    opacity: 0.5;
-  }
-  50% {
-    transform: translateX(50px) translateY(10px);
-    opacity: 0.7;
-  }
-  100% {
-    transform: translateX(0) translateY(0);
-    opacity: 0.5;
-  }
+  0% { transform: translateX(0) translateY(0); opacity: 0.5; }
+  50% { transform: translateX(50px) translateY(10px); opacity: 0.7; }
+  100% { transform: translateX(0) translateY(0); opacity: 0.5; }
 }
 
 /* Burza - pioruny */
 .bg-thunderstorm {
   background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%);
   position: relative;
-  overflow: hidden;
-  animation: thunderFlash 6s infinite;
+  animation: thunderFlash 12s infinite; /* Wydłużone do 12s dla spokoju */
 }
 
 .bg-thunderstorm::before {
   content: '';
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   background: radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
-  animation: lightningBolt 6s infinite;
+  animation: lightningBolt 12s infinite;
   pointer-events: none;
   z-index: 1;
 }
@@ -91,59 +65,40 @@ body {
   content: '';
   position: fixed;
   top: 0;
-  width: 250px;
-  height: 350px;
-  /* Rozgałęziona błyskawica narysowana w SVG */
+  width: 250px; height: 350px;
   background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="250" height="350" viewBox="0 0 250 350"><path d="M150 0 L120 70 L160 80 L90 200 L130 210 L50 350" stroke="%23ffffff" stroke-width="5" stroke-linejoin="round" fill="none"/><path d="M160 80 L220 140 L200 180 M120 70 L60 100 M90 200 L30 240 M130 210 L180 270 L170 310" stroke="%23ffffff" stroke-width="2" stroke-linejoin="round" fill="none" opacity="0.8"/></svg>');
   background-size: contain;
   background-repeat: no-repeat;
-  /* Silny efekt świecenia (Glow) */
   filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.9)) drop-shadow(0 0 30px rgba(150, 200, 255, 0.8));
   animation: boltStrike 12s infinite;
   z-index: 2;
 }
 
 @keyframes thunderFlash {
-  0%, 100% {
-    background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%);
-  }
-  10%, 15% {
-    background: linear-gradient(135deg, #445566 0%, #556677 100%);
-  }
-  30%, 35% {
-    background: linear-gradient(135deg, #445566 0%, #556677 100%);
-  }
+  0%, 100% { background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%); }
+  10%, 15% { background: linear-gradient(135deg, #445566 0%, #556677 100%); }
+  30%, 35% { background: linear-gradient(135deg, #445566 0%, #556677 100%); }
 }
 
 @keyframes lightningBolt {
-  0%, 100% {
-    opacity: 0;
-  }
-  10%, 15% {
-    opacity: 1;
-  }
-  30%, 35% {
-    opacity: 1;
-  }
+  0%, 100% { opacity: 0; }
+  10%, 15% { opacity: 1; }
+  30%, 35% { opacity: 1; }
 }
 
-/* Zmieniona animacja: piorun skacze po różnych pozycjach (left) i zmienia kształt/rozmiar (transform) */
 @keyframes boltStrike {
   0%, 100% { opacity: 0; left: 10%; transform: scale(1); }
   10% { opacity: 1; left: 10%; transform: scale(1); }
   12% { opacity: 0; left: 10%; transform: scale(1); }
-
   30% { opacity: 0; left: 60%; transform: scaleX(-1) scale(0.8); }
   31% { opacity: 1; left: 60%; transform: scaleX(-1) scale(0.8); }
   33% { opacity: 0; left: 60%; transform: scaleX(-1) scale(0.8); }
-
   60% { opacity: 0; left: 35%; transform: scale(0.9); }
   61% { opacity: 1; left: 35%; transform: scale(0.9); }
   62% { opacity: 0; left: 35%; transform: scale(0.9); }
   63% { opacity: 1; left: 35%; transform: scale(0.9); }
   65% { opacity: 0; left: 35%; transform: scale(0.9); }
 }
-
 
 /* Animacja dla słońca (Clear) */
 .bg-clear::before {
@@ -156,84 +111,51 @@ body {
   box-shadow: 0 0 40px #ffdf00;
   animation: pulseSun 3s infinite alternate;
   pointer-events: none;
-  z-index: -1;
+  z-index: 0;
 }
 
-/* --- ZMIENIONA, POPRAWNA ANIMACJA DLA DESZCZU --- */
+/* --- ANIMACJA DLA DESZCZU --- */
 .bg-rain {
-  /* Mroczny, deszczowy gradient nieba */
   background: linear-gradient(135deg, #4A5D73 0%, #1E2A38 100%);
   position: relative;
-  overflow: hidden;
 }
 
-/* Chmury i deszcz jako JEDEN element sięgający do dołu ekranu */
 .bg-rain::before,
 .bg-rain::after {
   content: '';
   position: fixed;
   top: 0;
   width: 200px;
-  height: 100vh; /* Rozciągamy kontener na deszcz do samego dołu */
-
-  /* 1 warstwa (na wierzchu): Chmura narysowana w SVG z gradientem 3D */
-  /* 2 warstwa (pod spodem): Kropelki deszczu */
+  height: 100vh;
   background-image:
     url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="100"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="%237a8c9e"/><stop offset="100%" stop-color="%234a5d73"/></linearGradient></defs><rect width="200" height="100" rx="50" fill="url(%23g)"/></svg>'),
     url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><line x1="20" y1="0" x2="20" y2="15" stroke="white" stroke-opacity="0.4" stroke-width="2" stroke-linecap="round"/><line x1="70" y1="40" x2="70" y2="55" stroke="white" stroke-opacity="0.3" stroke-width="1.5" stroke-linecap="round"/><line x1="40" y1="80" x2="40" y2="95" stroke="white" stroke-opacity="0.5" stroke-width="2" stroke-linecap="round"/></svg>');
-
   background-size: 200px 100px, 100px 100px;
-
-  /* Chmura pojawia się raz, a deszcz powtarza się w osi Y */
   background-repeat: no-repeat, repeat-y;
   z-index: 1;
-
-  /* Łączymy animację bujania całej chmury z animacją padania kropel */
   animation: floatClouds 15s infinite ease-in-out, fallRainLocal 0.7s linear infinite;
-
-  /* --- NOWE POZYCJONOWANIE --- */
-  /* Chmura: 0 0 (góra-lewo) */
-  /* Deszcz: 50px 100px (przesunięty na środek i ZACZYNA SIĘ POD CHMURĄ) */
   background-position: 0 0, 50px 100px;
 }
 
-/* Pierwsza chmura z lewej */
-.bg-rain::before {
-  left: 10%;
-  animation-delay: 0s, 0s;
-}
+.bg-rain::before { left: 10%; animation-delay: 0s, 0s; }
+.bg-rain::after { right: 10%; animation-delay: 5s, 0s; }
 
-/* Druga chmura z prawej */
-.bg-rain::after {
-  right: 10%;
-  animation-delay: 5s, 0s; /* Opóźniamy tylko bujanie, deszcz pada od razu */
-}
-
-/* Klatka kluczowa animująca wyłącznie kropelki w dół kontenera */
-/* Zaczynamy od pionowego przesunięcia 100px (pod chmurą) */
 @keyframes fallRainLocal {
   from { background-position: 0 0, 50px 100px; }
   to { background-position: 0 0, 50px 200px; }
 }
 
-@keyframes moveClouds {
-  from { transform: translateX(100vw); }
-  to { transform: translateX(-100vw); }
-}
 @keyframes pulseSun {
   from { transform: scale(1); opacity: 0.8; }
   to { transform: scale(1.1); opacity: 1; }
 }
 
-/* --- ANIMACJA DLA ŚNIEGU - Z PRAWDZIWYMI PŁATKAMI --- */
+/* --- ANIMACJA DLA ŚNIEGU --- */
 .bg-snow {
-  /* Zimowy gradient nieba */
   background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
   position: relative;
-  overflow: hidden;
 }
 
-/* --- ANIMACJA DLA ŚNIEGU - Z PRAWDZIWYMI PŁATKAMI --- */
 .bg-snow::before,
 .bg-snow::after {
   content: '';
@@ -241,37 +163,19 @@ body {
   top: 0;
   width: 200px;
   height: 100vh;
-
-  /* 1 warstwa: Zimowa chmura w SVG */
-  /* 2 warstwa: Estetyczne, klasyczne płatki śniegu (sześcioramienne) w SVG */
   background-image:
     url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="100"><defs><linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="%23ffffff"/><stop offset="100%" stop-color="%23d0deeb"/></linearGradient></defs><rect width="200" height="100" rx="50" fill="url(%23s)"/></svg>'),
     url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150"><g stroke="%23ffffff" stroke-width="4" stroke-linecap="round"><g transform="translate(10 10) scale(0.6)" opacity="0.9"><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15"/><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15" transform="rotate(60 50 50)"/><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15" transform="rotate(120 50 50)"/><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15" transform="rotate(180 50 50)"/><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15" transform="rotate(240 50 50)"/><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15" transform="rotate(300 50 50)"/></g><g transform="translate(80 30) scale(0.35)" opacity="0.6"><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15"/><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15" transform="rotate(60 50 50)"/><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15" transform="rotate(120 50 50)"/><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15" transform="rotate(180 50 50)"/><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15" transform="rotate(240 50 50)"/><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15" transform="rotate(300 50 50)"/></g><g transform="translate(30 80) scale(0.5)" opacity="0.8"><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15"/><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15" transform="rotate(60 50 50)"/><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15" transform="rotate(120 50 50)"/><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15" transform="rotate(180 50 50)"/><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15" transform="rotate(240 50 50)"/><path d="M50 50 L50 15 M50 30 L35 15 M50 30 L65 15" transform="rotate(300 50 50)"/></g></g></svg>');
-
-  /* Rozmiar kafelka z płatkami ustawiony na 120px dla idealnej skali */
   background-size: 200px 100px, 120px 120px;
   background-repeat: no-repeat, repeat-y;
   z-index: 1;
-
-  /* Płynne bujanie chmury i powolne opadanie śniegu */
   animation: floatClouds 15s infinite ease-in-out, fallSnowLocal 2s linear infinite;
-
-  /* Wyśrodkowanie pod chmurą */
   background-position: 0 0, 40px 100px;
 }
 
-.bg-snow::before {
-  left: 10%;
-  animation-delay: 0s, 0s;
-}
+.bg-snow::before { left: 10%; animation-delay: 0s, 0s; }
+.bg-snow::after { right: 10%; animation-delay: 5s, 0s; }
 
-.bg-snow::after {
-  right: 10%;
-  animation-delay: 5s, 0s;
-}
-
-/* Klatka kluczowa animująca powolne padanie śniegu */
-/* Przesuwamy o rozmiar kafelka płatków, czyli 120px */
 @keyframes fallSnowLocal {
   from { background-position: 0 0, 40px 100px; }
   to { background-position: 0 0, 40px 220px; }
@@ -285,7 +189,13 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 1;
+
+  /* DODANO: Te dwie linijki naprawiają nachodzenie animacji na inputy! */
+  position: relative;
+  z-index: 10;
+
+  /* DODANO: Chroni przed rozjeżdżaniem się przy 375px */
+  box-sizing: border-box;
 }
 
 .inputs {
@@ -294,27 +204,36 @@ body {
   margin-bottom: 30px;
   width: 100%;
   justify-content: center;
+  box-sizing: border-box; /* DODANO */
+}
+
+input, button {
+  padding: 12px 20px;
+  font-size: 16px;
+  border-radius: 25px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  outline: none;
+  box-sizing: border-box; /* DODANO: Ważne dla urządzeń mobilnych */
 }
 
 input {
-  padding: 12px 20px;
-  font-size: 16px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(5px);
   border: none;
-  border-radius: 25px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   width: 250px;
-  outline: none;
+  transition: box-shadow 0.3s ease;
+}
+
+input:focus {
+  box-shadow: 0 0 15px rgba(0, 123, 255, 0.5); /* Niebieska poświata */
+  border: 1px solid #007BFF;
 }
 
 button {
-  padding: 12px 25px;
-  font-size: 16px;
   background-color: #007BFF;
   color: white;
   border: none;
-  border-radius: 25px;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
   transition: all 0.3s ease;
 }
 
@@ -335,6 +254,7 @@ button:hover {
   max-width: 500px;
   text-align: center;
   animation: fadeIn 0.8s ease-out;
+  box-sizing: border-box; /* DODANO */
 }
 
 .weather_info h2 {
@@ -358,23 +278,9 @@ button:hover {
   filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
 }
 
-.main-temp {
-  text-align: left;
-}
-
-.main-temp #temperature {
-  font-size: 42px;
-  font-weight: bold;
-  color: #111;
-  margin: 0;
-}
-
-.main-temp .desc {
-  font-size: 18px;
-  color: #555;
-  text-transform: capitalize;
-  margin: 0;
-}
+.main-temp { text-align: left; }
+.main-temp #temperature { font-size: 42px; font-weight: bold; color: #111; margin: 0; }
+.main-temp .desc { font-size: 18px; color: #555; text-transform: capitalize; margin: 0; }
 
 .extra-info {
   display: flex;
@@ -384,17 +290,13 @@ button:hover {
   padding: 15px;
 }
 
-.extra-info p {
-  margin: 0;
-  font-size: 15px;
-  color: #444;
-  font-weight: bold;
-}
+.extra-info p { margin: 0; font-size: 15px; color: #444; font-weight: bold; }
 
 /* --- FORECAST 5-DAY --- */
 #forecast {
   width: 100%;
   animation: fadeIn 1.2s ease-out;
+  box-sizing: border-box; /* DODANO */
 }
 
 #forecast h2 {
@@ -411,15 +313,13 @@ button:hover {
   padding: 10px 5px;
   scrollbar-width: thin;
   scrollbar-color: rgba(255,255,255,0.8) transparent;
+
+  /* DODANO: Gładkie przewijanie kart palcem na iOS / iPhone */
+  -webkit-overflow-scrolling: touch;
 }
 
-.forecast-cards-container::-webkit-scrollbar {
-  height: 8px;
-}
-.forecast-cards-container::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.8);
-  border-radius: 10px;
-}
+.forecast-cards-container::-webkit-scrollbar { height: 8px; }
+.forecast-cards-container::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.8); border-radius: 10px; }
 
 .forecast-card {
   background: rgba(255, 255, 255, 0.85);
@@ -433,6 +333,7 @@ button:hover {
   flex-direction: column;
   align-items: center;
   flex-shrink: 0;
+  box-sizing: border-box; /* DODANO */
 }
 
 .forecast-card .date { font-size: 13px; color: #666; font-weight: bold; }
@@ -452,22 +353,35 @@ button:hover {
     flex-direction: column;
     align-items: center;
   }
+
+  /* Na małych ekranach input i przycisk w 100% dostosują się do kontenera */
   input, button {
     width: 100%;
-    max-width: 300px;
+    max-width: 100%;
   }
-  .weather_info {
-    padding: 20px;
+
+  .weather_info { padding: 20px; }
+  .current-weather-details { flex-direction: column; gap: 5px; }
+  .main-temp { text-align: center; }
+  .extra-info { flex-direction: column; gap: 10px; }
+
+  .bg-clear::before {
+    top: 3%; /* Bliżej góry (wcześniej 10%) */
+    right: 3%; /* Bliżej prawej (wcześniej 10%) */
   }
-  .current-weather-details {
-    flex-direction: column;
-    gap: 5px;
+}
+
+/* Ekstremalnie małe telefony (np. starsze iPhone'y 375px) */
+@media (max-width: 400px) {
+  .app-container {
+    padding: 15px 10px;
   }
-  .main-temp {
-    text-align: center;
+
+  .main-temp #temperature {
+    font-size: 36px; /* Zmniejszenie ogromnego tekstu na małym ekranie */
   }
-  .extra-info {
-    flex-direction: column;
-    gap: 10px;
+
+  .weather_info h2 {
+    font-size: 20px;
   }
 }
