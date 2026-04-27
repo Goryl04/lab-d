@@ -1,4 +1,7 @@
-/* --- KLASA POMOCNICZA DO UKRYWANIA ELEMENTÓW --- */
+/*
+Wykorzystano LLM do dynamicznego generowania tła i animacji pogodowych, a także do stworzenia responsywnego designu.
+Przykładowe klasy tła: .bg-clear, .bg-clouds, .bg-thunderstorm, .bg-rain, .bg-snow.
+*/
 .hidden {
   display: none !important;
 }
@@ -12,15 +15,13 @@ body {
   align-items: center;
   min-height: 100vh;
   transition: background 0.5s ease;
-  overflow-x: hidden; /* Ukrywa tylko poziomy pasek przez animacje w tle */
+  overflow-x: hidden;
 }
 
-/* --- DYNAMICZNE TŁA I ANIMACJE --- */
 .bg-default { background: linear-gradient(to bottom, #87CEEB, #E0F6FF); }
 .bg-clear { background: linear-gradient(to bottom, #4facfe, #00f2fe); }
 .bg-clouds { background: linear-gradient(to bottom, #8ca3a3, #cbdad5); position: relative; }
 
-/* Animacja dla chmur */
 .bg-clouds::before,
 .bg-clouds::after {
   content: '';
@@ -43,11 +44,10 @@ body {
   100% { transform: translateX(0) translateY(0); opacity: 0.5; }
 }
 
-/* Burza - pioruny */
 .bg-thunderstorm {
   background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%);
   position: relative;
-  animation: thunderFlash 12s infinite; /* Wydłużone do 12s dla spokoju */
+  animation: thunderFlash 12s infinite;
 }
 
 .bg-thunderstorm::before {
@@ -100,7 +100,6 @@ body {
   65% { opacity: 0; left: 35%; transform: scale(0.9); }
 }
 
-/* Animacja dla słońca (Clear) */
 .bg-clear::before {
   content: '';
   position: absolute;
@@ -114,7 +113,6 @@ body {
   z-index: 0;
 }
 
-/* --- ANIMACJA DLA DESZCZU --- */
 .bg-rain {
   background: linear-gradient(135deg, #4A5D73 0%, #1E2A38 100%);
   position: relative;
@@ -150,7 +148,6 @@ body {
   to { transform: scale(1.1); opacity: 1; }
 }
 
-/* --- ANIMACJA DLA ŚNIEGU --- */
 .bg-snow {
   background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
   position: relative;
@@ -181,7 +178,6 @@ body {
   to { background-position: 0 0, 40px 220px; }
 }
 
-/* --- GŁÓWNY KONTENER --- */
 .app-container {
   width: 100%;
   max-width: 800px;
@@ -189,12 +185,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  /* DODANO: Te dwie linijki naprawiają nachodzenie animacji na inputy! */
   position: relative;
   z-index: 10;
-
-  /* DODANO: Chroni przed rozjeżdżaniem się przy 375px */
   box-sizing: border-box;
 }
 
@@ -204,7 +196,7 @@ body {
   margin-bottom: 30px;
   width: 100%;
   justify-content: center;
-  box-sizing: border-box; /* DODANO */
+  box-sizing: border-box;
 }
 
 input, button {
@@ -213,7 +205,7 @@ input, button {
   border-radius: 25px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   outline: none;
-  box-sizing: border-box; /* DODANO: Ważne dla urządzeń mobilnych */
+  box-sizing: border-box;
 }
 
 input {
@@ -225,7 +217,7 @@ input {
 }
 
 input:focus {
-  box-shadow: 0 0 15px rgba(0, 123, 255, 0.5); /* Niebieska poświata */
+  box-shadow: 0 0 15px rgba(0, 123, 255, 0.5);
   border: 1px solid #007BFF;
 }
 
@@ -242,7 +234,6 @@ button:hover {
   transform: translateY(-2px);
 }
 
-/* --- CURRENT WEATHER WIDGET --- */
 .weather_info {
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(10px);
@@ -254,7 +245,7 @@ button:hover {
   max-width: 500px;
   text-align: center;
   animation: fadeIn 0.8s ease-out;
-  box-sizing: border-box; /* DODANO */
+  box-sizing: border-box;
 }
 
 .weather_info h2 {
@@ -292,11 +283,10 @@ button:hover {
 
 .extra-info p { margin: 0; font-size: 15px; color: #444; font-weight: bold; }
 
-/* --- FORECAST 5-DAY --- */
 #forecast {
   width: 100%;
   animation: fadeIn 1.2s ease-out;
-  box-sizing: border-box; /* DODANO */
+  box-sizing: border-box;
 }
 
 #forecast h2 {
@@ -313,8 +303,6 @@ button:hover {
   padding: 10px 5px;
   scrollbar-width: thin;
   scrollbar-color: rgba(255,255,255,0.8) transparent;
-
-  /* DODANO: Gładkie przewijanie kart palcem na iOS / iPhone */
   -webkit-overflow-scrolling: touch;
 }
 
@@ -333,7 +321,7 @@ button:hover {
   flex-direction: column;
   align-items: center;
   flex-shrink: 0;
-  box-sizing: border-box; /* DODANO */
+  box-sizing: border-box;
 }
 
 .forecast-card .date { font-size: 13px; color: #666; font-weight: bold; }
@@ -347,14 +335,12 @@ button:hover {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* --- RESPONSIVE MOBILE --- */
 @media (max-width: 768px) {
   .inputs {
     flex-direction: column;
     align-items: center;
   }
 
-  /* Na małych ekranach input i przycisk w 100% dostosują się do kontenera */
   input, button {
     width: 100%;
     max-width: 100%;
@@ -366,19 +352,18 @@ button:hover {
   .extra-info { flex-direction: column; gap: 10px; }
 
   .bg-clear::before {
-    top: 3%; /* Bliżej góry (wcześniej 10%) */
-    right: 3%; /* Bliżej prawej (wcześniej 10%) */
+    top: 3%;
+    right: 3%;
   }
 }
 
-/* Ekstremalnie małe telefony (np. starsze iPhone'y 375px) */
 @media (max-width: 400px) {
   .app-container {
     padding: 15px 10px;
   }
 
   .main-temp #temperature {
-    font-size: 36px; /* Zmniejszenie ogromnego tekstu na małym ekranie */
+    font-size: 36px;
   }
 
   .weather_info h2 {

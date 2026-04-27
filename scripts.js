@@ -1,10 +1,9 @@
-const apiKey = 'f140c741947fc420dc645078da626e77'; // Twój klucz API
+const apiKey = 'f140c741947fc420dc645078da626e77';
 
 document.getElementById('check_btn').addEventListener('click', function() {
   const city = document.getElementById('enter_bar').value;
   if (!city) return;
 
-  // Aktualna pogoda (XMLHttpRequest)
   const xhr = new XMLHttpRequest();
   xhr.open('GET', `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=pl`, true);
   xhr.onload = function() {
@@ -12,7 +11,7 @@ document.getElementById('check_btn').addEventListener('click', function() {
       const data = JSON.parse(xhr.responseText);
       console.log('Aktualna pogoda:', data);
       displayCurrentWeather(data);
-      changeBackground(data.weather[0].main); // Dynamiczna zmiana tła
+      changeBackground(data.weather[0].main);
     } else {
       console.error('Błąd pobierania aktualnej pogody');
       alert("Nie znaleziono miasta!");
@@ -20,7 +19,6 @@ document.getElementById('check_btn').addEventListener('click', function() {
   };
   xhr.send();
 
-  // Prognoza 5-dniowa (Fetch API)
   fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric&lang=pl`)
     .then(response => response.json())
     .then(data => {
@@ -32,14 +30,12 @@ document.getElementById('check_btn').addEventListener('click', function() {
 
 function displayCurrentWeather(data) {
   const weatherInfo = document.getElementById('weather_info');
-  // Zamiast style.display, usuwamy klasę 'hidden'
   weatherInfo.classList.remove('hidden');
 
   document.getElementById('city_name').textContent = `Pogoda w ${data.name}`;
   document.getElementById('temperature').textContent = `${Math.round(data.main.temp)}°C`;
   document.getElementById('description').textContent = data.weather[0].description;
 
-  // Dodatkowe dane: ikona, wiatr, wilgotność
   const iconCode = data.weather[0].icon;
   document.getElementById('current_icon').src = `https://openweathermap.org/img/wn/${iconCode}@4x.png`;
   document.getElementById('wind_speed').textContent = `💨 Wiatr: ${data.wind.speed} km/h`;
@@ -50,14 +46,11 @@ function displayForecast(data, city) {
   const forecastDiv = document.getElementById('forecast');
   const forecastCardsContainer = document.getElementById('forecast_cards');
 
-  // Zamiast style.display, usuwamy klasę 'hidden'
   forecastDiv.classList.remove('hidden');
   document.getElementById('forecast_title').textContent = `Prognoza 5-dniowa dla ${city}`;
 
-  // Czyszczenie poprzednich wyników
   forecastCardsContainer.innerHTML = '';
 
-  // Iteracja po wynikach i tworzenie kart
   data.list.forEach(item => {
     const dateObj = new Date(item.dt * 1000);
     const date = dateObj.toLocaleDateString('pl-PL', { day: '2-digit', month: '2-digit' });
